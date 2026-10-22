@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Mapa infrastruktury Dolnego Śląska</title>
+<style>
+__FONTS__
+__MAPLIBRE_CSS__
+__SHELL_CSS__
+__APP_CSS__
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="menubar" id="menubar">
+    <img class="mb-logo" alt="DoLab" src="data:image/png;base64,__LOGO__">
+    <div class="mb"><button>Plik</button><div class="menu">
+      <button class="mi" data-act="import"><span class="ck"></span>Wczytaj warstwę GeoJSON…<span class="k">Ctrl+O</span></button>
+      <button class="mi" data-act="png"><span class="ck"></span>Zapisz widok jako PNG<span class="k">Ctrl+S</span></button>
+      <div class="msep"></div>
+      <button class="mi" data-act="about"><span class="ck"></span>O danych i źródłach</button>
+    </div></div>
+    <div class="mb"><button>Edytuj</button><div class="menu">
+      <button class="mi" data-act="find"><span class="ck"></span>Szukaj obiektu…<span class="k">Ctrl+F</span></button>
+      <button class="mi" data-act="clear"><span class="ck"></span>Wyczyść zaznaczenie<span class="k">Esc</span></button>
+    </div></div>
+    <div class="mb"><button>Widok</button><div class="menu">
+      <button class="mi" data-act="tree" data-check="tree"><span class="ck"></span>Panel warstw<span class="k">Ctrl+B</span></button>
+      <button class="mi" data-act="aside" data-check="aside"><span class="ck"></span>Panel szczegółów<span class="k">Ctrl+I</span></button>
+      <div class="msep"></div>
+      <button class="mi" data-act="globe" data-check="globe"><span class="ck"></span>Widok globu<span class="k">G</span></button>
+      <button class="mi" data-act="teren" data-check="teren"><span class="ck"></span>Rzeźba terenu 3D<span class="k">T</span></button>
+      <div class="msep"></div>
+      <button class="mi" data-act="home"><span class="ck"></span>Cały Dolny Śląsk<span class="k">Home</span></button>
+      <button class="mi" data-act="world"><span class="ck"></span>Cała Ziemia (satelity)</button>
+      <button class="mi" data-act="full"><span class="ck"></span>Pełny ekran<span class="k">F11</span></button>
+      <div class="msep"></div>
+      <button class="mi" data-act="napraw"><span class="ck"></span>Napraw widok</button>
+    </div></div>
+    <div class="mb"><button>Dane</button><div class="menu">
+      <button class="mi" data-act="refresh"><span class="ck"></span>Odśwież dane na żywo</button>
+      <button class="mi" data-act="kse"><span class="ck"></span>Stan systemu elektroenergetycznego (PSE)</button>
+      <div class="msep"></div>
+      <button class="mi" data-act="about"><span class="ck"></span>Źródła i licencje</button>
+    </div></div>
+    <div class="mb"><button>Pomoc</button><div class="menu">
+      <button class="mi" data-act="keys"><span class="ck"></span>Skróty klawiszowe<span class="k">?</span></button>
+      <button class="mi" data-act="diag"><span class="ck"></span>Diagnostyka</button>
+      <button class="mi" data-act="about"><span class="ck"></span>O programie</button>
+    </div></div>
+    <div class="tb-sp"></div>
+  </div>
+
+  <div class="grid" id="grid">
+    <nav class="tree" id="tree">
+      <div class="grip grip-l" id="gripL" title="Przeciągnij, aby zmienić szerokość (do zera chowa panel)"></div>
+      <div class="pre-h">Widoki</div>
+      <div class="presety" id="presety"></div>
+      <div class="tree-h"><span>Warstwy</span>
+        <div class="tree-h-r">
+          <button class="lnkbtn" data-act="layers-all" title="Zaznacz wszystkie warstwy">Wszystko</button>
+          <button class="lnkbtn" data-act="layers-none" title="Odznacz wszystkie warstwy">Nic</button>
+          <button class="icon-x" data-act="tree" title="Schowaj (Ctrl+B)"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
+        </div></div>
+      <div class="tree-b" id="treeBody"></div>
+    </nav>
+
+    <div class="mapcol">
+      <div id="map"></div>
+      <div id="tip"></div>
+      <div class="coord" id="coord">…</div>
+      <div class="toast" id="toast"></div>
+      <button class="kraw kraw-l" data-act="tree" title="Pokaż panel warstw (Ctrl+B)"><svg viewBox="0 0 12 12"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg></button>
+      <button class="kraw kraw-p" data-act="aside" title="Pokaż panel szczegółów (Ctrl+I)"><svg viewBox="0 0 12 12"><path d="M7.5 2.5L4 6l3.5 3.5"/></svg></button>
+      <div class="mapctl">
+        <button data-act="zin" title="Przybliż"><svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8"/></svg></button>
+        <button data-act="zout" title="Oddal"><svg viewBox="0 0 12 12"><path d="M2 6h8"/></svg></button>
+        <button data-act="home" title="Cały Dolny Śląsk (Home)"><svg viewBox="0 0 12 12"><path d="M1.5 6L6 2l4.5 4M3 5v5h6V5"/></svg></button>
+        <button data-act="globe" data-check="globe" title="Widok globu (G)">3D</button>
+        <button data-act="teren" data-check="teren" title="Rzeźba terenu 3D (T)"><svg viewBox="0 0 12 12"><path d="M1 10l3.2-5 2.1 3 1.3-2L11 10z"/></svg></button>
+      </div>
+    </div>
+
+    <aside id="aside">
+      <div class="grip" id="grip"></div>
+      <button class="icon-x aside-x" data-act="aside" title="Schowaj panel (Ctrl+I)"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
+      <div class="aside-in">
+        <div class="p-head" id="phead"></div>
+        <div class="p-body" id="pbody"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="statusbar" id="status"></div>
+</div>
+
+<div class="scrim" id="scrim"><div class="modal">
+  <div class="modal-h"><span class="t" id="modalT"></span>
+    <button class="x" data-act="modal-x"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button></div>
+  <div class="modal-b" id="modalB"></div>
+</div></div>
+
+<div class="find" id="find"><div class="find-box">
+  <input id="findIn" placeholder="Nazwa miejscowości, rzeki, drogi, lotniska, satelity…" autocomplete="off">
+  <div class="find-list" id="findList"></div>
+</div></div>
+
+<div class="obroc" id="obroc" role="alertdialog" aria-labelledby="obrocT">
+  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="20" y="8" width="24" height="40" rx="4"/><path d="M29 42h6"/><path d="M10 40a24 24 0 0 0 24 18M34 58l-5 2M34 58l-2-5"/></svg>
+  <div class="t" id="obrocT">Obróć telefon poziomo</div>
+  <div class="p">Mapa infrastruktury na razie nie obsługuje pionowego ekranu telefonu. W poziomie albo na komputerze działa w pełni.</div>
+</div>
+
+<input type="file" id="fileIn" accept=".geojson,.json,application/geo+json">
+
+<!-- Pełne teksty licencji składników muszą być w każdej kopii pliku;
+     okno „Źródła i licencje” pokazuje je z tego elementu. -->
+<script type="text/plain" id="licencje-skladnikow">__LICENCJE__</script>
+
+<script>__MAPLIBRE_JS__</script>
+<script>__SATELLITE_JS__</script>
+<script>window.INFRA = JSON.parse(__DATA__);</script>
+<script>__APP_JS__</script>
+</body>
+</html>

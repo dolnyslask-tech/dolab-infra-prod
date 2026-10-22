@@ -1,0 +1,143 @@
+{
+ "bbox": {
+  "s": 49.83,
+  "w": 14.39,
+  "n": 52.08,
+  "e": 18.23
+ },
+ "bufor_km": 30,
+ "warstwy": {
+  "swiat": {
+   "obiekty": 235,
+   "bajty": 603078,
+   "stan_osm": null,
+   "zrodlo": "Natural Earth 1:50m (world-atlas)"
+  },
+  "gminy": {
+   "obiekty": 169,
+   "bajty": 64980,
+   "stan_osm": null,
+   "zrodlo": "Atlas Dolnego Slaska (PRG/GUS)"
+  },
+  "woj-obrys": {
+   "obiekty": 68,
+   "bajty": 11425,
+   "stan_osm": null,
+   "zrodlo": "Atlas Dolnego Slaska (PRG/GUS)"
+  },
+  "drogi": {
+   "obiekty": 6328,
+   "bajty": 1663207,
+   "stan_osm": "2026-09-16T19:53:00Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "kolej": {
+   "obiekty": 1232,
+   "bajty": 502996,
+   "stan_osm": "2026-09-16T19:53:57Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "woda": {
+   "obiekty": 960,
+   "bajty": 1039305,
+   "stan_osm": "2026-09-16T18:01:41Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "przeprawy": {
+   "obiekty": 2076,
+   "bajty": 420944,
+   "stan_osm": "2026-09-16T18:02:41Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "granica": {
+   "obiekty": 362,
+   "bajty": 135892,
+   "stan_osm": "2026-09-16T18:04:45Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "przejscia": {
+   "obiekty": 66,
+   "bajty": 11447,
+   "stan_osm": "2026-09-16T18:04:45Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "lotniska": {
+   "obiekty": 61,
+   "bajty": 12763,
+   "stan_osm": "2026-09-16T18:19:53Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "logistyka": {
+   "obiekty": 348,
+   "bajty": 60598,
+   "stan_osm": "2026-09-16T18:18:51Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "energetyka": {
+   "obiekty": 6349,
+   "bajty": 1319125,
+   "stan_osm": "2026-09-17T21:09:04Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "akweny": {
+   "obiekty": 325,
+   "bajty": 171074,
+   "stan_osm": null,
+   "zrodlo": "OpenStreetMap"
+  },
+  "kopalnie": {
+   "obiekty": 538,
+   "bajty": 202822,
+   "stan_osm": "2026-09-17T21:11:03Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "przemysl": {
+   "obiekty": 1416,
+   "bajty": 262457,
+   "stan_osm": "2026-09-17T21:12:04Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "infra-punkty": {
+   "obiekty": 9763,
+   "bajty": 1516818,
+   "stan_osm": "2026-09-17T21:09:04Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "miejscowosci": {
+   "obiekty": 5677,
+   "bajty": 1261420,
+   "stan_osm": "2026-10-17T21:25:56Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "szczyty": {
+   "obiekty": 7288,
+   "bajty": 1198574,
+   "stan_osm": "2026-10-21T21:47:06Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "stacje": {
+   "obiekty": 321,
+   "bajty": 60197,
+   "stan_osm": "2026-09-20T22:22:59Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "tablice": {
+   "obiekty": 26,
+   "bajty": 5637,
+   "stan_osm": null,
+   "zrodlo": "TRAX Elektronik / GDDKiA"
+  },
+  "ulice-lok": {
+   "obiekty": 21767,
+   "bajty": 4334777,
+   "stan_osm": "2026-09-20T16:45:36Z",
+   "zrodlo": "OpenStreetMap"
+  },
+  "ulice-mia": {
+   "obiekty": 20182,
+   "bajty": 3792765,
+   "stan_osm": "2026-09-20T16:49:45Z",
+   "zrodlo": "OpenStreetMap"
+  }
+ }
+}
