@@ -2,6 +2,8 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
+<!-- Dostawcy danych dostają tylko adres strony, bez ścieżki (opisane w polityce prywatności). -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Mapa infrastruktury Dolnego Śląska</title>
 <style>
@@ -34,7 +36,8 @@ __APP_CSS__
       <div class="msep"></div>
       <button class="mi" data-act="home"><span class="ck"></span>Cały Dolny Śląsk<span class="k">Home</span></button>
       <button class="mi" data-act="world"><span class="ck"></span>Cała Ziemia (satelity)</button>
-      <button class="mi" data-act="full"><span class="ck"></span>Pełny ekran<span class="k">F11</span></button>
+      <button class="mi" data-act="fullOn" id="miFullOn"><span class="ck"></span>Tryb pełnoekranowy<span class="k">F11</span></button>
+      <button class="mi" data-act="fullOff" id="miFullOff" disabled><span class="ck"></span>Wyjdź z pełnego ekranu<span class="k">Esc</span></button>
       <div class="msep"></div>
       <button class="mi" data-act="napraw"><span class="ck"></span>Napraw widok</button>
     </div></div>
@@ -43,6 +46,7 @@ __APP_CSS__
       <button class="mi" data-act="kse"><span class="ck"></span>Stan systemu elektroenergetycznego (PSE)</button>
       <div class="msep"></div>
       <button class="mi" data-act="about"><span class="ck"></span>Źródła i licencje</button>
+      <button class="mi" data-act="prywatnosc"><span class="ck"></span>Polityka prywatności</button>
     </div></div>
     <div class="mb"><button>Pomoc</button><div class="menu">
       <button class="mi" data-act="keys"><span class="ck"></span>Skróty klawiszowe<span class="k">?</span></button>

@@ -62,11 +62,12 @@ wyświetlania, na warunkach dostawców:
 | Inter, © The Inter Project Authors | SIL OFL 1.1 | `assets/fonts/LICENSE-Inter.txt` |
 | JetBrains Mono, © The JetBrains Mono Project Authors | SIL OFL 1.1 | `assets/fonts/LICENSE-JetBrainsMono.txt` |
 | world-atlas, © Michael Bostock (dane Natural Earth) | ISC | `assets/world/LICENSE-world-atlas.txt` |
-| ikony Pinhead, Quincy Morgan i współtwórcy | CC0 1.0 | https://github.com/waysidemapping/pinhead |
-| ikony Röntgen, © Sergey Vartanov | CC BY 4.0 | https://github.com/enzet/Roentgen |
+| ikony obiektów, 18 zestawów z katalogu Iconify | MIT, ISC, Apache 2.0, CC0 1.0 | lista w `NOTICE.md` |
+| ikony Game Icons, Lorc, Delapouite i in. | CC BY 3.0 | https://game-icons.net |
+| ikony Streamline, Sharp free icons | CC BY 4.0 | https://github.com/webalys-hq/streamline-vectors |
 
-Ikony pochodzą z pakietu `@openstreetmap/id` 2.42.2 i są zmienione:
-przekolorowane, z białą obwódką i przeskalowane.
+Ikony są zmienione: biały znak na barwnej plakietce, zmieniona grubość
+linii i rozmiar. Która ikona z którego zestawu: `app/src/01a-znaki.js`.
 
 ## Znak DoLab
 

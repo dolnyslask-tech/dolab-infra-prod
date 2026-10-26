@@ -48,8 +48,10 @@ const countCache = {};
 function probka(it, px = 16) {
   const [kind, col] = it.sw || [];
   if (!kind) return "";
-  const ikona = (kind === "pt" || kind === "tr") && (ikonaGlowna(it.id) || (it.user && "flaga"));
-  if (ikona) return svgIkony(ikona, col, px);
+  if (kind === "pt" || kind === "tr") {
+    if (it.user) return svgIkony("flaga", col, px);
+    if (IK[it.id]) return svgWarstwy(it.id, px);
+  }
   return kind === "ln" ? `<i class="ln" style="border-color:${col}"></i>` : kind === "pt" ? `<i class="pt" style="background:${col}"></i>`
     : kind === "tr" ? `<i class="tr" style="border-bottom-color:${col}"></i>` : `<i class="ar" style="border-color:${col}"></i>`;
 }

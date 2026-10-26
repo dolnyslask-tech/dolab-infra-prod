@@ -81,7 +81,92 @@ function sprawdzLeniwe() {
 // Najcięższe źródła widoczne już przy całym regionie: budujemy je po pierwszej klatce
 // (requestIdleCallback), żeby nie blokowały pierwszego renderu.
 const ODROCZONE = ["drogi", "energetyka", "infra-punkty"];
-const idleCb = window.requestIdleCallback ? window.requestIdleCallback.bind(window) : fn => setTimeout(fn, 0);
+// Limit 1,5 s: migające pojazdy przerysowują mapę bez przerwy, więc przeglądarka
+// nigdy nie bywa bezczynna i bez limitu energetyka nie zbudowałaby się wcale.
+const idleCb = window.requestIdleCallback ? fn => window.requestIdleCallback(fn, {timeout: 1500}) : fn => setTimeout(fn, 0);
+
+// Jedna, dokładna linia na granicy województwa z Czechami i Niemcami.
+// Obrys województwa (z Atlasu, uproszczony: 320 punktów) i granica państwa
+// (OSM, dokładna) biegną tam wzdłuż siebie, ale rozjeżdżają się o kilkaset
+// metrów i wyglądały jak dwie granice. Ma być jedna linia, gruba (styl
+// województwa) i dokładna. Dlatego:
+// - odcinki granicy państwa leżące przy obrysie przechodzą do obrysu
+//   województwa (rysują się grubo, z dokładnym przebiegiem z OSM),
+// - uproszczone odcinki obrysu leżące przy granicy państwa wypadają,
+// - reszta granicy państwa (poza województwem) zostaje cienka.
+// Białe tło województwa dalej idzie po uproszczonych gminach z Atlasu.
+// 4 km, nie 2: przy worku turoszowskim (Bogatynia) uproszczony obrys odstaje
+// od granicy o ponad 2 km i zostawaly tam dwie linie.
+const GRANICA_BLISKO_KM = 4;
+// Sklejanie stykajacych sie odcinkow w dlugie linie. Granica z OSM to
+// kilkaset krotkich drog; wzor kreska-kropka zaczyna sie od nowa na kazdej
+// z nich, wiec w oddaleniu linia wygladala na ciagla.
+function polaczLinie(linie) {
+  const k = p => p[0].toFixed(6) + "," + p[1].toFixed(6);
+  const wolne = linie.map(l => l.slice());
+  const wynik = [];
+  while (wolne.length) {
+    let l = wolne.pop(), dolaczono = true;
+    while (dolaczono) {
+      dolaczono = false;
+      for (let i = 0; i < wolne.length; i++) {
+        const m = wolne[i], a = k(l[0]), z = k(l[l.length - 1]), ma = k(m[0]), mz = k(m[m.length - 1]);
+        if (z === ma) l = l.concat(m.slice(1));
+        else if (z === mz) l = l.concat(m.slice(0, -1).reverse());
+        else if (a === mz) l = m.concat(l.slice(1));
+        else if (a === ma) l = m.slice().reverse().concat(l.slice(1));
+        else continue;
+        wolne.splice(i, 1); dolaczono = true; break;
+      }
+    }
+    wynik.push(l);
+  }
+  return wynik;
+}
+function podzielGranice(granica, obrys) {
+  if (!granica?.features || !obrys?.features) return {granica, obrys};
+  const kx = 111.32 * Math.cos(51 * Math.PI / 180), ky = 110.57;
+  const linieZ = g => g.type === "LineString" ? [g.coordinates] : g.type === "MultiLineString" || g.type === "Polygon" ? g.coordinates : [];
+  const odcinki = fc => {
+    const o = [];
+    for (const f of fc.features) for (const l of linieZ(f.geometry))
+      for (let i = 1; i < l.length; i++) o.push([l[i - 1][0] * kx, l[i - 1][1] * ky, l[i][0] * kx, l[i][1] * ky]);
+    return o;
+  };
+  const blisko = odc => ([lon, lat]) => {
+    const x = lon * kx, y = lat * ky;
+    for (const [ax, ay, bx, by] of odc) {
+      const dx = bx - ax, dy = by - ay, d2 = dx * dx + dy * dy;
+      const t = d2 ? Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / d2)) : 0;
+      if (Math.hypot(x - ax - t * dx, y - ay - t * dy) < GRANICA_BLISKO_KM) return true;
+    }
+    return false;
+  };
+  // Dzieli linie warstwy na biegi "przy drugiej linii" i "z dala od niej".
+  const podziel = (fc, czyBlisko) => {
+    const przy = [], zDala = [];
+    for (const f of fc.features) for (const l of linieZ(f.geometry)) {
+      let bieg = [], stan = null;
+      const zamknij = () => { if (bieg.length > 1) (stan ? przy : zDala).push(bieg); };
+      for (const p of l) {
+        const b = czyBlisko(p);
+        if (stan !== null && b !== stan) { zamknij(); bieg = [bieg[bieg.length - 1]]; }
+        stan = b; bieg.push(p);
+      }
+      zamknij();
+    }
+    return {przy, zDala};
+  };
+  const g = podziel(granica, blisko(odcinki(obrys)));
+  const o = podziel(obrys, blisko(odcinki(granica)));
+  const fc = linie => ({type: "FeatureCollection", features: linie.length ? [{type: "Feature", properties: {}, geometry: {type: "MultiLineString", coordinates: linie}}] : []});
+  return {granica: {...granica, ...fc(polaczLinie(g.zDala))}, obrys: {...obrys, ...fc(polaczLinie([...o.zDala, ...g.przy]))}};
+}
+{
+  const p = podzielGranice(D.layers.granica, D.layers["woj-obrys"]);
+  D.layers.granica = p.granica;
+  D.layers["woj-obrys"] = p.obrys;
+}
 
 function addLayers() {
   for (const [k, gj] of Object.entries(D.layers)) {
@@ -91,7 +176,9 @@ function addLayers() {
   for (const b of BASEMAPS) {
     if (b.tiles) map.addSource(b.id, {type: "raster", tiles: b.tiles, tileSize: 256, maxzoom: b.max, attribution: b.attr});
   }
-  map.addSource("orm", {type: "raster", tileSize: 512, maxzoom: 19,
+  // Kafel ORM ma 512 px, ale rysunek jest w skali kafla 256 (wersja dla ekranów
+  // HiDPI). Przy tileSize 512 linie i napisy wychodziły dwa razy za grube.
+  map.addSource("orm", {type: "raster", tileSize: 256, maxzoom: 19,
     // Subdomeny a/b/c są wycofane przez ORM.
     tiles: ["https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png"],
     attribution: atr("orm")});
@@ -179,7 +266,9 @@ function addLayers() {
   rail("k-e", C.railE, [6, .7, 9, 1.3, 13, 2.6]);
   rail("k-b", C.railBud, [6, .8, 12, 2.4], [2, 1.2]);
 
-  L({id: "k-orm", type: "raster", source: "orm", layout: {visibility: "none"}, paint: {"raster-opacity": .85}});
+  // Przygaszone barwy: kolorowe napisy ORM (stacje, numery linii) mają wyglądać
+  // jak podpisy mapy, a barwy linii i tak niosą warstwy kolei pod spodem.
+  L({id: "k-orm", type: "raster", source: "orm", layout: {visibility: "none"}, paint: {"raster-opacity": .85, "raster-saturation": -.7}});
   L({id: "w-radar", type: "raster", source: "radar", layout: {visibility: "none"}, paint: {"raster-opacity": .55}});
   // Chmury pod ikonami obiektów, żeby nie zasłaniały klikalnych punktów.
   const CHM_ODCIEN = {biala: "#b8c2ce", szara: "#8b97a6", mgla: "#cfd6de", deszcz: "#5f6c7d", snieg: "#b3c0cf", burza: "#323b49"};
@@ -364,7 +453,7 @@ const INTERACTIVE = () => Object.values(ITEMS).filter(it => it.on && !it.base &&
 // Stałe nazwy "szczyt-gl" i "szczyt": odwołują się do nich warstwy szczytów.
 function dodajIkonySzczytow() {
   for (const [nazwa, id] of [["szczyt-gl", "t-gl"], ["szczyt", "t-sz"]]) {
-    obrazIkony(IK[id].ik, IK[id].kol, nazwa);
+    obrazZnaku(IK[id].ik, IK[id].kol, ksztaltWarstwy(id), nazwa);
   }
 }
 

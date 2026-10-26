@@ -546,6 +546,20 @@ html,body{overflow:hidden;overscroll-behavior:none;touch-action:pan-y}
     background:#fff repeating-linear-gradient(0deg,transparent 0 5px,var(--rule-2) 5px 6px) center/2px 30px no-repeat;
     border:1px solid var(--rule-2);border-radius:3px;box-shadow:0 1px 4px rgba(15,23,42,.18)}
   .grip.on::before{border-color:var(--ink)}
-  .tree .tree-h .icon-x{position:absolute;top:8px;right:12px;z-index:3}
 }
+/* Zamknięcie panelu warstw w prawym górnym rogu, na wysokości „Widoki”. */
+.tree .tree-h .icon-x{position:absolute;top:8px;right:12px;z-index:3}
+
+
+/* Polityka prywatności: druga kolumna to opis, nie krótka licencja. */
+table.lic.prv td:first-child{width:36%}
+table.lic.prv td:last-child,table.lic.prv th:last-child{width:auto}
+table.lic.prv td span{display:block;margin-top:2px}
+table.lic.prv code,.modal-b p code{font-family:var(--mono);font-size:11px}
+.st-link+.st-link{margin-left:14px}
+/* Uwaga o becie: pierwsza rzecz w oknach polityki i źródeł, w barwach marki. */
+.beta-uwaga{margin:12px 0 4px;padding:12px 14px;border:1px solid var(--gold-line);border-left:4px solid var(--gold);
+  background:var(--gold-pale);border-radius:2px;font-size:12.5px;line-height:1.5}
+.beta-uwaga b{display:block;font-size:13px;margin-bottom:4px}
+.beta-uwaga p{margin:6px 0 0}
 

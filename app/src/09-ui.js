@@ -72,7 +72,8 @@ function zakresDat() {
   return a === b ? a : `od ${a} do ${b}`;
 }
 function aboutHtml() {
-  return `<h4>O mapie</h4>
+  return `${UWAGA_BETA}
+    <h4>O mapie</h4>
     <p>Mapa infrastruktury Dolnego Śląska z pasem przygranicznym w Czechach i Niemczech: sieć drogowa, kolejowa, energetyczna i wodna oraz dane na żywo (transport, pogoda, wodowskazy, satelity). Projekt DoLab, wersja beta.</p>
     <p>Dane OpenStreetMap pobrane ${zakresDat() || "(brak daty)"}. Dane na żywo pochodzą bezpośrednio od ich dostawców i odświeżają się przy otwartej mapie.</p>
     <h4>Źródła danych</h4>
@@ -80,6 +81,8 @@ function aboutHtml() {
     <h4>Licencja</h4>
     <p>Program © ${PROGRAM.rok} ${esc(PROGRAM.wlasciciel)}, licencja <b>${PROGRAM.licencjaKodu}</b>. Warstwy z OpenStreetMap: licencja <b>${PROGRAM.licencjaDanych}</b> (${aHref("https://opendatacommons.org/licenses/odbl/1-0/", "tekst licencji")}), © ${aHref("https://www.openstreetmap.org/copyright", "współtwórcy OpenStreetMap")}.</p>
     <details class="lic-pelne"><summary>Pełne teksty licencji składników</summary><pre>${document.getElementById("licencje-skladnikow")?.innerHTML || ""}</pre></details>
+    <h4>Prywatność</h4>
+    <p>Z kim łączy się przeglądarka i co mapa zapisuje na urządzeniu: <a href="#" data-act="prywatnosc">Polityka prywatności</a>.</p>
     <h4>Kontakt</h4>
     <p>${aHref(PROGRAM.kontakt, "dolnyslask.tech/kontakt")}</p>`;
 }
@@ -250,11 +253,17 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 
 const ACT = {
   import: () => $("#fileIn").click(), png: savePng, about: () => modal("O danych i źródłach", aboutHtml()),
+  prywatnosc: () => modal("Polityka prywatności", politykaHtml()),
+  "pamiec-usun": () => { usunPamiec(); $("#modalB").innerHTML = politykaHtml(); },
   keys: () => modal("Skróty klawiszowe", KEYS), find: openFind, clear: clearSel,
   tree: () => showTree(), aside: () => showAside(), globe: () => setGlobe(!S.globe), teren: () => setTeren(!S.teren),
   home: () => { if (S.globe) setGlobe(false); map.fitBounds(HOME, {padding: 30}); },
   world: () => { map.easeTo({center: [17, 30], zoom: 1.3, duration: 900}); },
   full: () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(),
+  // Dwie osobne pozycje w menu Widok: wejście i wyjście widać zawsze,
+  // nieaktualna jest wyszarzona (patrz fullscreenchange).
+  fullOn: () => { if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); },
+  fullOff: () => { if (document.fullscreenElement) document.exitFullscreen(); },
   refresh: () => {
     ensureSatGroups(true); loadMotis(true);
     for (const id in ZYWE) if (ITEMS[id].on) ZYWE[id].on();
@@ -357,15 +366,46 @@ function renderStatus() {
     ${miaraWidoku()}
     ${/* Transitous wymaga kontaktu na stronie, która odpytuje ich API. */""}
     <span class="st-dolab">${aHref(PROGRAM.www, "dolnyslask.tech")} · ${aHref(PROGRAM.kontakt, "kontakt")}</span>
-    <button class="st-link" data-act="about">Źródła i licencje</button>`;
+    <button class="st-link" data-act="about">Źródła i licencje</button>
+    <button class="st-link" data-act="prywatnosc">Prywatność</button>`;
 }
+
+// Stan pozycji pełnego ekranu w menu Widok. Zdarzenie przychodzi też po
+// wyjściu klawiszem Esc albo F11, więc menu nie rozjedzie się z ekranem.
+function odswiezPelnyEkran() {
+  const pelny = !!document.fullscreenElement;
+  $("#miFullOn").disabled = pelny;
+  $("#miFullOff").disabled = !pelny;
+  if (!document.documentElement.requestFullscreen) $("#miFullOn").disabled = true;
+}
+document.addEventListener("fullscreenchange", odswiezPelnyEkran);
 
 renderTree();
 renderStatus();
 refreshChecks();
+odswiezPelnyEkran();
 if (innerWidth <= 1100) { showTree(false); showAside(false); }
-map.on("load", () => {
+// Obiekty w ruchu (pojazdy, satelity) migają wolno, żeby od razu było widać,
+// co jest na żywo. Krok co 100 ms, nie co klatkę: mapa nie przerysowuje się
+// 60 razy na sekundę. Przy „ogranicz ruch” w systemie bez migania.
+const MIGANIE_MIN = .5;
+const RUCHOME = [...Object.keys(POJAZDY), ...Object.keys(SAT_GROUPS).map(g => "s-" + g)];
+function migajRuchome() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  setInterval(() => {
+    if (document.hidden) return;
+    // Najwyżej do połowy przezroczystości: przygaszony pojazd ma być dalej widoczny.
+    const a = MIGANIE_MIN + (1 - MIGANIE_MIN) * (1 + Math.cos(Date.now() / 3000 * 2 * Math.PI)) / 2;
+    for (const id of RUCHOME) if (ITEMS[id]?.on && map.getLayer(id)) map.setPaintProperty(id, "icon-opacity", a);
+  }, 100);
+}
+
+// Obrazy ikon powstają asynchronicznie (01b-ikony.js), a warstwa bez obrazu
+// zostałaby pusta, więc warstwy dopiero po nich.
+map.on("load", async () => {
+  await ZNAKI_GOTOWE;
   addLayers();
+  migajRuchome();
   updatePlaces();
   updatePeaks();
   renderPanel();

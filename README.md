@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <img alt="Wersja" src="https://img.shields.io/badge/wersja-0.26_beta-FABC06?style=flat-square">
+  <img alt="Wersja" src="https://img.shields.io/badge/wersja-0.27_beta-FABC06?style=flat-square">
   <img alt="Licencja kodu: MIT" src="https://img.shields.io/badge/kod-MIT-0B0B0B?style=flat-square">
   <img alt="Dane: ODbL" src="https://img.shields.io/badge/dane-ODbL-0B0B0B?style=flat-square">
   <img alt="Działa offline" src="https://img.shields.io/badge/działa-offline-0B0B0B?style=flat-square">

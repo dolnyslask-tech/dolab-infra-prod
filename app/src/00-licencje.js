@@ -127,14 +127,21 @@ const ZRODLA = [
   {id: "maplibre", grupa: "Biblioteki", nazwa: "MapLibre GL JS", co: "silnik mapy", lic: "BSD-3-Clause", warunki: "https://github.com/maplibre/maplibre-gl-js/blob/main/LICENSE.txt", kom: "tak", atr: ""},
   {id: "satellitejs", grupa: "Biblioteki", nazwa: "satellite.js", co: "model SGP4", lic: "MIT", warunki: "https://github.com/shashwatak/satellite-js/blob/develop/LICENSE", kom: "tak", atr: ""},
   {id: "fonty", grupa: "Biblioteki", nazwa: "Inter, JetBrains Mono", co: "czcionki", lic: "SIL OFL 1.1", warunki: "https://openfontlicense.org", kom: "tak", atr: ""},
-  // Röntgen wymaga podania autora; jak przy bibliotekach wystarcza wpis w oknie
-  // „Źródła i licencje”, bez napisu w rogu mapy.
-  {id: "pinhead", grupa: "Biblioteki", nazwa: "Pinhead, ikony (Quincy Morgan)", co: "ikony obiektów na mapie i w drzewie warstw",
-   lic: "CC0 1.0", warunki: "https://github.com/waysidemapping/pinhead", kom: "tak", atr: ""},
-  {id: "roentgen", grupa: "Biblioteki", nazwa: "Röntgen, ikony (Sergey Vartanov)", co: "ikony: kamera drogowa, suwnica, panel PV, transformator, pociąg, autokar, satelita",
+  // Ikony obiektów: lista zestawów w 01a-znaki.js (ZESTAWY_ZNAKOW), każdy wskazuje
+  // tu swój wpis. Zestawy CC BY wymagają podania autora, więc mają osobne wpisy
+  // z atrybucją; jak przy bibliotekach wystarcza okno „Źródła i licencje”.
+  {id: "ikony", grupa: "Biblioteki", nazwa: "Ikony obiektów (zestawy z Iconify)",
+   co: "Tabler, Phosphor, Lucide, Hugeicons, IconPark, Material Symbols, Material Design Icons, Fluent UI, Iconoir, ProIcons, Keyline, IconOven, IconMind, Energy Icons, Griddy, Health Icons, Pinhead, Temaki",
+   lic: "MIT, ISC, Apache 2.0, CC0 1.0", warunki: "https://icon-sets.iconify.design", kom: "tak", atr: "",
+   uwagi: "Ikony na plakietkach (kolor, rozmiar, grubość linii zmienione), zmiana zaznaczona w NOTICE.md."},
+  {id: "game-icons", grupa: "Biblioteki", nazwa: "Game Icons (Lorc, Delapouite i in.)", co: "ikony: lotnisko wojskowe, wieża ciśnień, koparka kołowa, szyb kopalni, zbiornik paliw",
+   lic: "CC BY 3.0", warunki: "https://creativecommons.org/licenses/by/3.0/", kom: "tak",
+   atr: `ikony: ${aHref("https://game-icons.net", "game-icons.net")} (Lorc, Delapouite i in.), CC BY 3.0`},
+  {id: "streamline", grupa: "Biblioteki", nazwa: "Streamline, Sharp free icons", co: "ikona: kopalnia podziemna",
    lic: "CC BY 4.0", warunki: "https://creativecommons.org/licenses/by/4.0/", kom: "tak",
-   atr: `ikony: ${aHref("https://github.com/enzet/Roentgen", "Röntgen")} © Sergey Vartanov, CC BY 4.0`,
-   uwagi: "Ikony przerysowane (kolor, obwódka, rozmiar), zmiana zaznaczona w NOTICE.md."},
+   atr: `ikona: ${aHref("https://github.com/webalys-hq/streamline-vectors", "Streamline")}, CC BY 4.0`},
+  {id: "pinhead", grupa: "Biblioteki", nazwa: "Pinhead, ikony (Quincy Morgan)", co: "flaga własnych warstw",
+   lic: "CC0 1.0", warunki: "https://github.com/waysidemapping/pinhead", kom: "tak", atr: ""},
 ];
 
 // Źródła wyłączone przy budowie. W danych kamery górskie mają kod `zr` "gora",
