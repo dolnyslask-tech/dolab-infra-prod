@@ -27,13 +27,13 @@ const KIEDY = {
 
 const POLACZENIA = [
   {kto: "GitHub (GitHub, Inc., USA; GitHub B.V., Holandia)", co: "hosting pliku mapy", kiedy: "start",
-   dane: "adres IP zapisywany przez GitHub w logach bezpieczeństwa; GitHub deklaruje udział w EU-US Data Privacy Framework",
+   dane: "adres IP zapisywany przez GitHub w logach bezpieczeństwa; GitHub jest na liście EU-US Data Privacy Framework",
    hosty: ["github.io", "github.com"], polityka: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"},
   {kto: "Transitous (projekt społeczności, operator niewskazany)", co: "pociągi i autobusy na żywo", kiedy: "start",
    dane: "widoczny obszar mapy i powiększenie, co 30 s, gdy karta jest widoczna; logi do 2 dni",
    hosty: ["transitous.org"], polityka: "https://transitous.org/privacy/"},
   {kto: "RainViewer (MeteoLab Inc., USA)", co: "radar opadów", kiedy: "start",
-   dane: "kafle widocznego obszaru; serwery w UE i poza UE, dostawca nie wskazuje podstawy przekazania",
+   dane: "kafle widocznego obszaru; serwery w UE i poza UE; firmy nie ma na liście EU-US Data Privacy Framework",
    hosty: ["rainviewer.com"], polityka: "https://www.rainviewer.com/privacy.html"},
   {kto: "IMGW-PIB (Warszawa)", co: "ostrzeżenia, wodowskazy, odczyty stacji", kiedy: "start",
    dane: "nic poza standardowymi danymi połączenia; pełne listy, bez zapytań o miejsce",
@@ -41,9 +41,9 @@ const POLACZENIA = [
   {kto: "GDDKiA, Krajowy Punkt Dostępowy (Warszawa)", co: "utrudnienia w ruchu", kiedy: "start",
    dane: "nic poza standardowymi danymi połączenia; ruch przechodzi przez sieć Imperva",
    hosty: ["gddkia.gov.pl"], polityka: "https://kpd.gddkia.gov.pl/index.php/pl/polityka-prywatnosci-i-plikow-cookies/"},
-  {kto: "Sensor.Community (projekt społeczności, Niemcy)", co: "jakość powietrza", kiedy: "start",
-   dane: "stały prostokąt obejmujący region; nie znaleźliśmy polityki prywatności dostawcy",
-   hosty: ["sensor.community"], polityka: "https://sensor.community/"},
+  {kto: "Sensor.Community (Rajko Zschiegner, Niemcy)", co: "jakość powietrza", kiedy: "start",
+   dane: "stały prostokąt obejmujący region; polityka dostawcy nie opisuje logów serwera danych",
+   hosty: ["sensor.community"], polityka: "https://sensor.community/en/privacy-terms/"},
   {kto: "CelesTrak (T.S. Kelso, USA)", co: "orbity satelitów", kiedy: "start",
    dane: "nazwa grupy satelitów; najwyżej raz na 2 h, kopia w pamięci przeglądarki; logi IP, bez cookies",
    hosty: ["celestrak.org"], polityka: "https://celestrak.org/webmaster.php"},
@@ -61,17 +61,17 @@ const POLACZENIA = [
   {kto: "OpenRailwayMap (Michael Reichert, Niemcy)", co: "nakładka kolejowa", kiedy: "warstwa",
    dane: "kafle widocznego obszaru i adres strony (wymagany przez dostawcę); logi 7 dni, bez cookies",
    hosty: ["openrailwaymap.org"], polityka: "https://knallfrosch.openrailwaymap.org/en/imprint"},
-  {kto: "Amazon Web Services (USA)", co: "dane wysokości do rzeźby terenu 3D", kiedy: "warstwa",
-   dane: "kafle widocznego obszaru; serwer w USA (zbiór Tilezen nie jest dostępny publicznie z kopii w UE)",
+  {kto: "Amazon Web Services (Amazon.com, Inc., USA)", co: "dane wysokości do rzeźby terenu 3D", kiedy: "warstwa",
+   dane: "kafle widocznego obszaru; serwer w USA, Amazon jest na liście EU-US Data Privacy Framework",
    hosty: ["amazonaws.com"], polityka: "https://aws.amazon.com/privacy/"},
   {kto: "Wikimedia Foundation (USA)", co: "opisy i zdjęcia obiektów (Wikipedia, Wikidata, Commons)", kiedy: "klik",
-   dane: "tytuł artykułu, identyfikator Wikidata i współrzędne wybranego obiektu, nie Twoje położenie; dane do 90 dni",
+   dane: "tytuł artykułu, identyfikator Wikidata i współrzędne wybranego obiektu, nie Twoje położenie; dane do 90 dni; fundacji nie ma na liście EU-US Data Privacy Framework",
    hosty: ["wikipedia.org", "wikidata.org", "wikimedia.org"], polityka: "https://foundation.wikimedia.org/wiki/Policy:Privacy_policy"},
   {kto: "YouTube (Google Ireland Limited)", co: "podgląd jednej kamery górskiej", kiedy: "klik",
    dane: "identyfikator filmu; tryb rozszerzonej prywatności (youtube-nocookie.com), po odtworzeniu Google może zapisać dane w przeglądarce",
    hosty: ["youtube-nocookie.com", "youtube.com", "ytimg.com", "googlevideo.com", "google.com", "gstatic.com"], polityka: "https://policies.google.com/privacy"},
   {kto: "PSE S.A. (Konstancin-Jeziorna)", co: "stan systemu elektroenergetycznego", kiedy: "menu",
-   dane: "data dnia; serwer w chmurze Microsoft Azure", hosty: ["pse.pl"], polityka: "https://www.pse.pl/zasady-przetwarzania-danych-osobowych"},
+   dane: "data dnia; serwer w chmurze Microsoft Azure (Microsoft jest na liście EU-US Data Privacy Framework)", hosty: ["pse.pl"], polityka: "https://www.pse.pl/zasady-przetwarzania-danych-osobowych"},
 ];
 
 const hostPolaczenia = host => POLACZENIA.find(p => p.hosty.some(h => host === h || host.endsWith("." + h)));
@@ -116,7 +116,8 @@ function politykaHtml() {
     <h4>Odnośniki</h4>
     <p>Linki do kamer, źródeł i licencji otwierają strony innych podmiotów w nowej karcie. Od tej chwili obowiązują zasady tamtej strony.</p>
     <h4>Przekazywanie poza EOG</h4>
-    <p>GitHub, RainViewer, CelesTrak, NASA, Amazon Web Services i Wikimedia Foundation mają siedzibę albo serwery w USA. Od razu po otwarciu mapy łączysz się z trzema z nich: GitHub (plik mapy), RainViewer (radar opadów) i CelesTrak (satelity). Radar i grupy satelitów możesz wyłączyć w drzewie warstw. Z pozostałymi łączysz się dopiero po włączeniu ich warstwy albo kliknięciu obiektu. Open-Meteo działa w Szwajcarii, dla której Komisja Europejska wydała decyzję o odpowiednim stopniu ochrony.</p>
+    <p>Część dostawców ma siedzibę albo serwery w USA. GitHub, Amazon (AWS), Google (YouTube) i Microsoft (serwer PSE) są na liście EU-US Data Privacy Framework, objętej decyzją Komisji Europejskiej o odpowiednim stopniu ochrony (stan listy z ${esc(POLITYKA.wersja)}). Na tej liście nie ma RainViewer (MeteoLab Inc.) ani Wikimedia Foundation, a CelesTrak (osoba prywatna) i NASA (instytucja rządowa) jej nie podlegają.</p>
+    <p>Od razu po otwarciu mapy łączysz się z trzema z nich: GitHub (plik mapy), RainViewer (radar opadów) i CelesTrak (satelity). Radar i grupy satelitów możesz wyłączyć w drzewie warstw; mapa zapamięta wybór. Z pozostałymi łączysz się dopiero po włączeniu ich warstwy albo kliknięciu obiektu. Open-Meteo działa w Szwajcarii, dla której Komisja Europejska także wydała decyzję o odpowiednim stopniu ochrony.</p>
     <h4>Podstawa i Twoje prawa</h4>
     <p>Przesłanie adresu IP do dostawcy w chwili pobrania danych opieramy na prawnie uzasadnionym interesie (art. 6 ust. 1 lit. f RODO): udostępnianiu aktualnych danych publicznych o infrastrukturze regionu. Za dalsze przetwarzanie u dostawcy odpowiada dostawca, na swoich zasadach. Mapa nie podejmuje zautomatyzowanych decyzji i nie profiluje odwiedzających.</p>
     <p>Masz prawo do dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i sprzeciwu (art. 15 do 18 i 21 RODO) oraz do skargi do Prezesa Urzędu Ochrony Danych Osobowych. Napisz: ${a("mailto:" + POLITYKA.email, POLITYKA.email)}.</p>
